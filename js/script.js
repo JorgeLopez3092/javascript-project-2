@@ -97,7 +97,6 @@ const appendPageLinks = (list) => {
          .getElementsByTagName('li')[0]
          .getElementsByTagName('a')[0]
          .classList.add('active');
-         
       a.addEventListener('click', (e) => {
          const button = e.target;
          let page = e.target.text;
