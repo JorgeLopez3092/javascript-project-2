@@ -16,7 +16,7 @@ FSJS project 2 - List Filter and Pagination
    will only be used inside of a function, then it can be locally 
    scoped to that function.
 ***/
-const pageDiv = document.getElementsByClassName('page');
+const pageDiv = document.getElementsByClassName('page')[0];
 const students = document.getElementsByClassName('student-item');
 const perPage = 10;
 const names = document.querySelectorAll('.student-details h3');
@@ -62,41 +62,71 @@ showPage(students, 1);
    functionality to the pagination buttons.
 ***/
 
+
+// function highlighter(target, list) {
+//    let highlighted = target;
+//    for(let i = 0; i < list.length; i++)
+//    if(i = target) {
+//       highlighter.className = 'active';
+//    } else {
+//       highlighted
+//    }
+// }
+
+
+
+
+
 const appendPageLinks = (list) => {
    let totalPages = Math.ceil(list.length / perPage);
-   console.log(totalPages);
-   const buttonsDiv = document.createElement('div');
-   buttonsDiv.className = 'pages';
-   pageDiv.appendChild(buttonsDiv);
-   const numberedButtons = document.createElement('ul');
-   buttonsDiv.appendChild(numberedButtons);
+   const pageButtonDiv = document.createElement('div');
+   pageButtonDiv.className = 'pagination';
+   const ul = document.createElement('ul');
+   pageDiv.appendChild(pageButtonDiv);
+   pageButtonDiv.appendChild(ul);
+   for(let i = 0; i < totalPages; i++) {
+     let li = document.createElement('li');
+     let a = document.createElement('a');
+     a.textContent = i + 1;
+     a.href = '#';
+     ul.appendChild(li);
+     li.appendChild(a);
+     document
+         .getElementsByClassName('pagination')[0]
+         .getElementsByTagName('ul')[0]
+         .getElementsByTagName('li')[0]
+         .getElementsByTagName('a')[0]
+         .classList.add('active');
+         
+      a.addEventListener('click', (e) => {
+         const button = e.target;
+         let page = e.target.text;
+         const items = document
+            .getElementsByClassName('pagination')[0]
+            .getElementsByTagName('ul')[0]
+            .getElementsByTagName('li');
+         for(let i = 0; i < items.length; i += 1) {
+            const anchor = items[i].getElementsByTagName('a')[0];
+            const position = anchor.text;
+            
+            if (position === page) {
+               anchor.classList.add('active');
+            } else {
+               anchor.classList.remove('active');
+            }
+         }
 
-   //loop to create each unit with page #
-   for(let i = 0; i < noOfPages; i++) {
-      let li = document.createElement('li');
-      let a = document.createElement('a');
-      a.textContent = i + 1;
-      a.href = '#';
-      if(i === 0) {
-         a.className = 'active'
-      }
-      numberedButtons.appendChild(li);
-      li.appendChild(a);
+         showPage(students, page);
+      });
    }
-   numberedButtons.addEventListener('click', (e) => {
-      const button = e.target;
-      let page = e.target.textContent;
 
-      showPage(list, page);
-      const links = document.querySelectorAll('.pagination a');
-//LEFT OFF HERE!
-      for(let i = 0; i M )
-   });
 }
 appendPageLinks(students);
 
 
 
-
-
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
+
+
+
+
