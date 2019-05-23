@@ -20,7 +20,38 @@ const pageDiv = document.getElementsByClassName('page')[0];
 const students = document.getElementsByClassName('student-item');
 const perPage = 10;
 const names = document.querySelectorAll('.student-details h3');
+const pageHeader = document.getElementsByClassName('page-header')[0];
 
+
+
+
+const appendSearch = () => {
+   const searchDiv = document.createElement('div');
+   searchDiv.classList.add('student-search');
+   const searchBar = document.createElement('input');
+   searchBar.placeholder = 'Search for students...';
+   const searchButton = document.createElement('button');
+   searchButton.textContent = 'Search';
+   pageHeader.appendChild(searchDiv).appendChild(searchBar)
+   searchDiv.appendChild(searchButton);
+
+   searchDiv.addEventListener('submit', (e) => {
+      console.log('activate');
+      let filter = searchBar.value.toUpperCase();
+      let item = students;
+      let displayTarget = document.querySelectorAll('.student-item');
+      console.log('I\'m running!')
+      if(item) {
+         if(item.indexOf(filter) > -1) {
+            displayTarget[i].style.display = "";
+         } else {
+            displayTarget[i].style.display = "none";
+         }
+      }
+   });
+}
+
+appendSearch();
 
 
 /*** 
