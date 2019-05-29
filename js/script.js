@@ -17,7 +17,7 @@ FSJS project 2 - List Filter and Pagination
    scoped to that function.
 ***/
 const pageDiv = document.getElementsByClassName('page')[0];
-const students = document.getElementsByClassName('student-item');
+// const students = document.getElementsByClassName('student-item');
 const perPage = 10;
 const names = document.querySelectorAll('.student-details h3');
 const pageHeader = document.getElementsByClassName('page-header')[0];
@@ -29,25 +29,35 @@ const appendSearch = () => {
    const searchDiv = document.createElement('div');
    searchDiv.classList.add('student-search');
    const searchBar = document.createElement('input');
+   searchBar.id = 'searchBar';
    searchBar.placeholder = 'Search for students...';
    const searchButton = document.createElement('button');
+   searchButton.style.cursor = 'pointer';
    searchButton.textContent = 'Search';
-   pageHeader.appendChild(searchDiv).appendChild(searchBar)
+   pageHeader.appendChild(searchDiv).appendChild(searchBar);
    searchDiv.appendChild(searchButton);
 
-   searchDiv.addEventListener('submit', (e) => {
+   searchButton.addEventListener('click', (e) => {
       console.log('activate');
       let filter = searchBar.value.toUpperCase();
-      let item = students;
-      let displayTarget = document.querySelectorAll('.student-item');
-      console.log('I\'m running!')
-      if(item) {
-         if(item.indexOf(filter) > -1) {
-            displayTarget[i].style.display = "";
+      // let displayTarget = document.querySelectorAll('.student-item');
+      const students = document.getElementsByClassName('student-item');
+      const _list = [];
+      for(let i = 0; i < students.length; i++){
+         const searchTarget = document
+         .querySelectorAll('.student-item')[i]
+         .querySelector('.student-details')
+         .querySelector('h3');
+         const h3Text = searchTarget.innerText.toUpperCase();
+         if(h3Text.indexOf(filter) === -1) {
+            students[i].style.display = 'none';
          } else {
-            displayTarget[i].style.display = "none";
+            students[i].style.display = "";
+            _list.push(students[i]);
          }
       }
+      showPage(_list, 1);
+      appendPageLinks(_list);
    });
 }
 
@@ -85,7 +95,7 @@ const showPage = (list, page) => {
 }
 
 //to show the first page
-showPage(students, 1);
+
 
 
 /*** 
@@ -109,12 +119,26 @@ showPage(students, 1);
 
 
 const appendPageLinks = (list) => {
+   console.log(list);
    let totalPages = Math.ceil(list.length / perPage);
-   const pageButtonDiv = document.createElement('div');
-   pageButtonDiv.className = 'pagination';
+
+   // const pageButtonDiv = document.getElementsByClassName('pagination')
+   //    || document.createElement('div');
+   let pageButtonDiv = document.getElementsByClassName('pagination');
    const ul = document.createElement('ul');
-   pageDiv.appendChild(pageButtonDiv);
-   pageButtonDiv.appendChild(ul);
+
+   if (!pageButtonDiv.length) {
+      pageButtonDiv = document.createElement('div');
+      pageButtonDiv.classList.add('pagination');
+      pageDiv.appendChild(pageButtonDiv);
+      pageButtonDiv.appendChild(ul);
+   } else {
+      pageButtonDiv[0].innerHTML = '';
+      pageButtonDiv[0].appendChild(ul);
+   }
+
+
+
    for(let i = 0; i < totalPages; i++) {
      let li = document.createElement('li');
      let a = document.createElement('a');
@@ -129,7 +153,6 @@ const appendPageLinks = (list) => {
          .getElementsByTagName('a')[0]
          .classList.add('active');
       a.addEventListener('click', (e) => {
-         const button = e.target;
          let page = e.target.text;
          const items = document
             .getElementsByClassName('pagination')[0]
@@ -145,13 +168,22 @@ const appendPageLinks = (list) => {
                anchor.classList.remove('active');
             }
          }
-
-         showPage(students, page);
+         let filter = document.getElementById('searchBar').value;
+         console.log(filter);
+         if(!filter){
+            showPage(students, page);
+         }
       });
    }
 
 }
+
+
+const students = document.getElementsByClassName('student-item');
+
+showPage(students, 1);
 appendPageLinks(students);
+
 
 
 
