@@ -2,7 +2,7 @@
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
-   
+
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 
@@ -43,20 +43,29 @@ const appendSearch = () => {
       // let displayTarget = document.querySelectorAll('.student-item');
       const students = document.getElementsByClassName('student-item');
       const _list = [];
-      for(let i = 0; i < students.length; i++){
+      for (let i = 0; i < students.length; i++) {
          const searchTarget = document
-         .querySelectorAll('.student-item')[i]
-         .querySelector('.student-details')
-         .querySelector('h3');
+            .querySelectorAll('.student-item')[i]
+            .querySelector('.student-details')
+            .querySelector('h3');
          const h3Text = searchTarget.innerText.toUpperCase();
-         if(h3Text.indexOf(filter) === -1) {
+         if (h3Text.indexOf(filter) === -1) {
             students[i].style.display = 'none';
          } else {
             students[i].style.display = "";
             _list.push(students[i]);
          }
       }
-      showPage(_list, 1);
+      if (_list.length > 0) {
+         showPage(_list, 1);
+      } else {
+         const sorry = document.createElement('h1');
+         sorry.textContent = 'Sorry! No results found.';
+         sorry.style.textAlign = 'center';
+         if (sorry) {
+            pageDiv.removeChild(sorry);
+         }
+      }
       appendPageLinks(_list);
    });
 }
@@ -81,12 +90,12 @@ appendSearch();
 
 const showPage = (list, page) => {
    console.log('working');
-// get first and last item of each page
+   // get first and last item of each page
    const firstItem = (page * perPage) - perPage;
    const lastItem = (page * perPage);
-// loop through the items to pick which names are being shown
-   for(let i = 0; i < list.length; i++) {
-      if(i >= firstItem && i < lastItem) {
+   // loop through the items to pick which names are being shown
+   for (let i = 0; i < list.length; i++) {
+      if (i >= firstItem && i < lastItem) {
          list[i].style.display = '';
       } else {
          list[i].style.display = 'none';
@@ -126,7 +135,6 @@ const appendPageLinks = (list) => {
    //    || document.createElement('div');
    let pageButtonDiv = document.getElementsByClassName('pagination');
    const ul = document.createElement('ul');
-
    if (!pageButtonDiv.length) {
       pageButtonDiv = document.createElement('div');
       pageButtonDiv.classList.add('pagination');
@@ -136,17 +144,14 @@ const appendPageLinks = (list) => {
       pageButtonDiv[0].innerHTML = '';
       pageButtonDiv[0].appendChild(ul);
    }
-
-
-
-   for(let i = 0; i < totalPages; i++) {
-     let li = document.createElement('li');
-     let a = document.createElement('a');
-     a.textContent = i + 1;
-     a.href = '#';
-     ul.appendChild(li);
-     li.appendChild(a);
-     document
+   for (let i = 0; i < totalPages; i++) {
+      let li = document.createElement('li');
+      let a = document.createElement('a');
+      a.textContent = i + 1;
+      a.href = '#';
+      ul.appendChild(li);
+      li.appendChild(a);
+      document
          .getElementsByClassName('pagination')[0]
          .getElementsByTagName('ul')[0]
          .getElementsByTagName('li')[0]
@@ -158,10 +163,10 @@ const appendPageLinks = (list) => {
             .getElementsByClassName('pagination')[0]
             .getElementsByTagName('ul')[0]
             .getElementsByTagName('li');
-         for(let i = 0; i < items.length; i += 1) {
+         for (let i = 0; i < items.length; i += 1) {
             const anchor = items[i].getElementsByTagName('a')[0];
             const position = anchor.text;
-            
+
             if (position === page) {
                anchor.classList.add('active');
             } else {
@@ -170,8 +175,27 @@ const appendPageLinks = (list) => {
          }
          let filter = document.getElementById('searchBar').value;
          console.log(filter);
-         if(!filter){
+         if (!filter) {
             showPage(students, page);
+         } else {
+            let filter = searchBar.value.toUpperCase();
+            // let displayTarget = document.querySelectorAll('.student-item');
+            const students = document.getElementsByClassName('student-item');
+            const _list = [];
+            for (let i = 0; i < students.length; i++) {
+               const searchTarget = document
+                  .querySelectorAll('.student-item')[i]
+                  .querySelector('.student-details')
+                  .querySelector('h3');
+               const h3Text = searchTarget.innerText.toUpperCase();
+               if (h3Text.indexOf(filter) === -1) {
+                  students[i].style.display = 'none';
+               } else {
+                  students[i].style.display = "";
+                  _list.push(students[i]);
+               }
+            }
+            showPage(_list, page);
          }
       });
    }
@@ -181,6 +205,7 @@ const appendPageLinks = (list) => {
 
 const students = document.getElementsByClassName('student-item');
 
+// Initiate site's first load
 showPage(students, 1);
 appendPageLinks(students);
 
@@ -188,7 +213,3 @@ appendPageLinks(students);
 
 
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
-
-
-
-
