@@ -55,11 +55,10 @@ const appendSearch = () => {
    searchButton.textContent = 'Search';
    pageHeader.appendChild(searchDiv).appendChild(searchBar);
    searchDiv.appendChild(searchButton);
-// Adding search functionality to the input field and activating it with the button
-   // searchButton.addEventListener('click', (e) => {
-   //    searchActivate();
-   // });
+   // Adding search functionality to the input field and activating it with the button
+
    searchButton.addEventListener('click', searchActivate);
+   // Adding functionality with enter key
    searchBar.addEventListener('keyup', (e) => {
       const key = e.which || e.keyCode;
       if (key === 13) {
@@ -70,12 +69,11 @@ const appendSearch = () => {
 
 appendSearch();
 
-
 const showPage = (list, page) => {
-   // get first and last item of each page
+   // Get first and last item of each page
    const firstItem = (page * perPage) - perPage;
    const lastItem = (page * perPage);
-   // loop through the items to pick which names are being shown
+   // Loop through the items to pick which names are being shown
    for (let i = 0; i < list.length; i++) {
       if (i >= firstItem && i < lastItem) {
          list[i].style.display = '';
@@ -88,9 +86,6 @@ const showPage = (list, page) => {
 
 const appendPageLinks = (list) => {
    let totalPages = Math.ceil(list.length / perPage);
-
-   // const pageButtonDiv = document.getElementsByClassName('pagination')
-   //    || document.createElement('div');
    let pageButtonDiv = document.getElementsByClassName('pagination');
    const ul = document.createElement('ul');
    if (!pageButtonDiv.length) {
@@ -109,6 +104,7 @@ const appendPageLinks = (list) => {
       a.href = '#';
       ul.appendChild(li);
       li.appendChild(a);
+      // declaring page 1's class active on startup
       document
          .getElementsByClassName('pagination')[0]
          .getElementsByTagName('ul')[0]
@@ -116,15 +112,17 @@ const appendPageLinks = (list) => {
          .getElementsByTagName('a')[0]
          .classList.add('active');
       a.addEventListener('click', (e) => {
+         // targeting the number on the button to pass as argument
          let page = e.target.text;
          const items = document
             .getElementsByClassName('pagination')[0]
             .getElementsByTagName('ul')[0]
             .getElementsByTagName('li');
+         // selecting all the anchors by looping through them all
          for (let i = 0; i < items.length; i += 1) {
             const anchor = items[i].getElementsByTagName('a')[0];
             const position = anchor.text;
-
+            // matching the event target to one of the anchors to highlight the button
             if (position === page) {
                anchor.classList.add('active');
             } else {
@@ -136,8 +134,8 @@ const appendPageLinks = (list) => {
             showPage(students, page);
          } else {
             let filter = searchBar.value.toUpperCase();
-            // let displayTarget = document.querySelectorAll('.student-item');
             const students = document.getElementsByClassName('student-item');
+            //empty array to push search results into and use as an argument for the showPage function
             const _list = [];
             for (let i = 0; i < students.length; i++) {
                const searchTarget = document
@@ -156,17 +154,10 @@ const appendPageLinks = (list) => {
          }
       });
    }
-
 }
-
 
 const students = document.getElementsByClassName('student-item');
 
 // Initiate site's first load
 showPage(students, 1);
 appendPageLinks(students);
-
-
-
-
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
