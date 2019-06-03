@@ -3,28 +3,47 @@ Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
 
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
-
-
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
+// Global Variables
 const pageDiv = document.getElementsByClassName('page')[0];
-// const students = document.getElementsByClassName('student-item');
+// value for amount of students we want to display at a time
 const perPage = 10;
-const names = document.querySelectorAll('.student-details h3');
 const pageHeader = document.getElementsByClassName('page-header')[0];
+/* Message to display when no search results are found.  Will default to display: none
+   and only appear if the results array comes back as 0 */
+const sorry = document.createElement('h1');
+sorry.textContent = 'Sorry! No results found.';
+sorry.style.textAlign = 'center';
+pageDiv.appendChild(sorry);
+sorry.style.display = 'none';
 
+const searchActivate = () => {
+   let filter = searchBar.value.toUpperCase();
+   const students = document.getElementsByClassName('student-item');
+   // empty array to push search results into
+   const _list = [];
+   for (let i = 0; i < students.length; i++) {
+      const searchTarget = document
+         .querySelectorAll('.student-item')[i]
+         .querySelector('.student-details')
+         .querySelector('h3');
+      const h3Text = searchTarget.innerText.toUpperCase();
+      if (h3Text.indexOf(filter) === -1) {
+         students[i].style.display = 'none';
+      } else {
+         students[i].style.display = "";
+         _list.push(students[i]);
+      }
+   }
+   if (_list.length > 0) {
+      showPage(_list, 1);
+      sorry.style.display = 'none';
+   } else {
+      sorry.style.display = '';
+   }
+   appendPageLinks(_list);
+}
 
-
-
+// Adding the search bar to the page's header
 const appendSearch = () => {
    const searchDiv = document.createElement('div');
    searchDiv.classList.add('student-search');
@@ -36,60 +55,23 @@ const appendSearch = () => {
    searchButton.textContent = 'Search';
    pageHeader.appendChild(searchDiv).appendChild(searchBar);
    searchDiv.appendChild(searchButton);
-
-   searchButton.addEventListener('click', (e) => {
-      console.log('activate');
-      let filter = searchBar.value.toUpperCase();
-      // let displayTarget = document.querySelectorAll('.student-item');
-      const students = document.getElementsByClassName('student-item');
-      const _list = [];
-      for (let i = 0; i < students.length; i++) {
-         const searchTarget = document
-            .querySelectorAll('.student-item')[i]
-            .querySelector('.student-details')
-            .querySelector('h3');
-         const h3Text = searchTarget.innerText.toUpperCase();
-         if (h3Text.indexOf(filter) === -1) {
-            students[i].style.display = 'none';
-         } else {
-            students[i].style.display = "";
-            _list.push(students[i]);
-         }
+// Adding search functionality to the input field and activating it with the button
+   // searchButton.addEventListener('click', (e) => {
+   //    searchActivate();
+   // });
+   searchButton.addEventListener('click', searchActivate);
+   searchBar.addEventListener('keyup', (e) => {
+      const key = e.which || e.keyCode;
+      if (key === 13) {
+         searchActivate();
       }
-      if (_list.length > 0) {
-         showPage(_list, 1);
-      } else {
-         const sorry = document.createElement('h1');
-         sorry.textContent = 'Sorry! No results found.';
-         sorry.style.textAlign = 'center';
-         if (sorry) {
-            pageDiv.removeChild(sorry);
-         }
-      }
-      appendPageLinks(_list);
    });
 }
 
 appendSearch();
 
 
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
-
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
-
 const showPage = (list, page) => {
-   console.log('working');
    // get first and last item of each page
    const firstItem = (page * perPage) - perPage;
    const lastItem = (page * perPage);
@@ -103,32 +85,8 @@ const showPage = (list, page) => {
    }
 }
 
-//to show the first page
-
-
-
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
-***/
-
-
-// function highlighter(target, list) {
-//    let highlighted = target;
-//    for(let i = 0; i < list.length; i++)
-//    if(i = target) {
-//       highlighter.className = 'active';
-//    } else {
-//       highlighted
-//    }
-// }
-
-
-
-
 
 const appendPageLinks = (list) => {
-   console.log(list);
    let totalPages = Math.ceil(list.length / perPage);
 
    // const pageButtonDiv = document.getElementsByClassName('pagination')
@@ -174,7 +132,6 @@ const appendPageLinks = (list) => {
             }
          }
          let filter = document.getElementById('searchBar').value;
-         console.log(filter);
          if (!filter) {
             showPage(students, page);
          } else {
