@@ -54,17 +54,12 @@ const appendSearch = () => {
    searchButton.style.cursor = 'pointer';
    searchButton.textContent = 'Search';
    pageHeader.appendChild(searchDiv).appendChild(searchBar);
-   searchDiv.appendChild(searchButton);
+   // searchDiv.appendChild(searchButton);
    // Adding search functionality to the input field and activating it with the button
 
-   searchButton.addEventListener('click', searchActivate);
+   // searchButton.addEventListener('click', searchActivate);
    // Adding functionality with enter key
-   searchBar.addEventListener('keyup', (e) => {
-      const key = e.which || e.keyCode;
-      if (key === 13) {
-         searchActivate();
-      }
-   });
+   searchBar.addEventListener('keyup', searchActivate);
 }
 
 appendSearch();
